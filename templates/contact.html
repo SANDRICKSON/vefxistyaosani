@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="post">
+    {{form.hidden_tag()}}
+    <div class="row mb-2">
+        {{ form.message(class="form-control", placeholder=form.message.label.text) }}
+    </div>
+    
+    {{ form.submit(class="btn btn-primary") }} 
+ </form>
+{% endblock %}
