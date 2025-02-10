@@ -3,6 +3,7 @@ from forms import RegisterForm, MessageForm, LoginForm
 from flask_login import login_user, logout_user
 from extensions import app
 from models import User
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 
@@ -26,10 +27,10 @@ def author():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter(User.username == form.username.data).first()
-        if user and user.password == form.password.data:
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and check_password_hash(user.password, form.password.data):
             login_user(user)
-            return redirect(url_for("index"))
+            return redirect(url_for("index")) 
     return render_template("login.html", form=form)
 
 
