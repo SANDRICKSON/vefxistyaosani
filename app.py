@@ -1,5 +1,5 @@
 from flask import  render_template,redirect, url_for
-from forms import RegisterForm, MessageForm, LoginForm
+from forms import RegisterForm, MessageForm, LoginForm,UpdateForm
 from flask_login import login_user, logout_user, current_user, login_required
 from extensions import app
 from models import User
@@ -10,6 +10,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/update", methods=["GET", "POST"])
+def update():
+    form = UpdateForm()
+    if form.validate_on_submit():
+        print(form.update.data)
+    return render_template("update.html", form=form)
+
 
 @app.route("/about")
 def about():
