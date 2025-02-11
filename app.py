@@ -1,6 +1,6 @@
 from flask import  render_template,redirect, url_for
 from forms import RegisterForm, MessageForm, LoginForm
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user, login_required
 from extensions import app
 from models import User
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -37,6 +37,18 @@ def login():
 @app.route("/poem")
 def poem():
     return render_template("poem.html")
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
