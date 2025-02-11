@@ -11,6 +11,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 def index():
     return render_template("index.html")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 @app.route("/contact", methods=["GET", "POST"])  # Correct placement of methods argument
 def contact():
     form = MessageForm()
