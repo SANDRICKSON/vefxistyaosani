@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('index') }}">მთავარი </a>
+                        <a class="nav-link active" href="{{ url_for('index') }}">მთავარი</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('author') }}">ავტორი</a>
@@ -32,16 +32,25 @@
                            style="color: grey; pointer-events: none;" 
                            title="მალე დაემატება">გააგრძელე ვეფხისტყაოსანი</a>
                     </li>
-                    
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('contact') }}">კონტაქტი</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">შესვლა</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('register') }}">რეგისტრაცია</a>
-                    </li>
+                    
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('profile') }}">პროფილი</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">გასვლა</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">შესვლა</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register') }}">რეგისტრაცია</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
