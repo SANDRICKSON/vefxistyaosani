@@ -1,21 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
+
     <div class="container mt-4">
         <form method="post">
             {{ form.hidden_tag() }}
             <div class="row mb-3">
                 <div class="col-md-8">
-                    {{ form.message(class="form-control", placeholder=form.message.label.text) }}
+                    {{ form.message(class="form-control", placeholder=form.message.label.text, disabled=not current_user.is_authenticated) }}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-8">
-                    {{ form.submit(class="btn btn-primary btn-lg w-100") }}
+                    {% if current_user.is_authenticated %}
+                        {{ form.submit(class="btn btn-primary btn-lg w-100") }}
+                    {% else %}
+                        <button class="btn btn-secondary btn-lg w-100" disabled>გთხოვთ გაიარეთ ავტორიზაცია</button>
+                    {% endif %}
                 </div>
             </div>
         </form>
     </div>
-{% endblock %}
 
+{% endblock %}
