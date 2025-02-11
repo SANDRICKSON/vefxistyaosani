@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p><b>მომხმარებლის სახელი:</b> {{ current_user.username }}</p>
+    <p><b>სქესი:</b> {{ current_user.gender }}</p>
+    <p><b>დაბადების თარიღი:</b> {{ current_user.birthday }}</p>
+    <p><b>ქვეყანა:</b> {{ current_user.country }}</p>
+
+{% endblock %}
