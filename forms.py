@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField, RadioField, EmailField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField, RadioField, EmailField,TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo
 
 class RegisterForm(FlaskForm):
@@ -32,3 +32,9 @@ class LoginForm(FlaskForm):
 
        password = PasswordField("შეიყვანეთ პაროლი", validators=[DataRequired(), Length(min=8, max=64)])
        submit = SubmitField("ავტორიზაცია")
+
+
+class UpdateForm(FlaskForm):
+    username = StringField("შეიყვანეთ სახელი", validators=[DataRequired(), Length(min=8, max=64)])
+    message = TextAreaField("დაწერეთ თქვენეული გაგრძელება")
+    submit = SubmitField("გაგზავნა")
