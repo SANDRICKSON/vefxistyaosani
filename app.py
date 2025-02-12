@@ -9,31 +9,31 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", title="ვეფხისტყაოსანი")
 
 @app.route("/update", methods=["GET", "POST"])
 def update():
     form = UpdateForm()
     if form.validate_on_submit():
         print(form.update.data)
-    return render_template("update.html", form=form)
+    return render_template("update.html", form=form, title="გააგრძელე - ვეფხისტყაოსანი")
 
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("about.html", title="პროექტის შესახებ - ვეფხისტყაოსანი")
 
 @app.route("/contact", methods=["GET", "POST"])  # Correct placement of methods argument
 def contact():
     form = MessageForm()
     if form.validate_on_submit():
         print(form.message.data)
-    return render_template("contact.html", form=form)
+    return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
 
 
 @app.route("/author")
 def author():
-    return render_template("author.html")
+    return render_template("author.html", title="ავტორის შესახებ - ვეფხისტყაოსანი")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -43,24 +43,25 @@ def login():
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             return redirect(url_for("index")) 
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
 
 
 @app.route("/poem")
 def poem():
-    return render_template("poem.html")
+    return render_template("poem.html", title="პოემა - ვეფხისტყაოსანი")
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('index', title="ავტორიზაცია - ვეფხისტყაოსანი"))
+
 
 
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html")
+    return render_template("profile.html", title="პროფილი - ვეფხისტყაოსანი" )
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -77,7 +78,7 @@ def register():
         user.create()
         return redirect(url_for("login"))
         print(form.errors)
-    return render_template("register.html", form=form)
+    return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
 if __name__ == "__main__":  
     app.run(debug=True)
