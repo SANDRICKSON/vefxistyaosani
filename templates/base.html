@@ -21,23 +21,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('index') }}">მთავარი</a>
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">მთავარი</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('author') }}">ავტორი</a>
+                        <a class="nav-link {% if request.endpoint == 'author' %}active{% endif %}" href="{{ url_for('author') }}">ავტორი</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('poem') }}">პოემა</a>
+                        <a class="nav-link {% if request.endpoint == 'poem' %}active{% endif %}" href="{{ url_for('poem') }}">პოემა</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('update') }}" >გააგრძელე ვეფხისტყაოსანი</a>
+                        <a class="nav-link {% if request.endpoint == 'update' %}active{% endif %}" href="{{ url_for('update') }}">გააგრძელე ვეფხისტყაოსანი</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contact') }}">კონტაქტი</a>
+                        <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">კონტაქტი</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">პროექტის შესახებ</a>
+                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">პროექტის შესახებ</a>
                     </li>
+                    
                     
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
@@ -68,6 +69,13 @@
             font-family: "BPG Classic Medium", sans-serif;
             font-size:30px;
         }
+
+        .nav-link.active {
+    font-weight: bold;
+    color: #d9534f !important; /* გამოკვეთილი ფერი */
+    border-bottom: 2px solid #d9534f;
+}
+
     </style>
     {% block content %}
     {% endblock %}
