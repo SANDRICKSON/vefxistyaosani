@@ -19,17 +19,23 @@
                 <p class="list-group-item" style="font-size: 1.1rem; font-weight: 500; color: #34495e;">
                     <i class="fas fa-globe" style="color: #1abc9c;"></i> <strong>ქვეყანა:</strong> <span style="color: #9b59b6;">{{ current_user.country }}</span>
                 </p>
+                <p class="list-group-item" style="font-size: 1.1rem; font-weight: 500; color: #34495e;">
+                    <i class="fas fa-id-badge" style="color: #9b59b6;"></i> <strong>როლი:</strong> 
+                    {% if current_user.id == 1 %}
+                        <span style="color: #e74c3c;">ადმინისტრატორი</span>
+                    {% else %}
+                        <span style="color: #2ecc71;">სტუმარი</span>
+                    {% endif %}
+                </p>
             </div>
         </div>
     </div>
     <style>
         .list-group-item{
             font-family: "BPG Classic Medium", sans-serif;
-            
         }
         .good{
             font-family: "BPG Classic Medium", sans-serif;
-            
         }
     </style>
 {% endblock %}
