@@ -1,4 +1,4 @@
-from flask import  render_template,redirect, url_for
+from flask import  render_template,redirect, url_for, flash
 from forms import RegisterForm, MessageForm, LoginForm,UpdateForm
 from flask_login import login_user, logout_user, current_user, login_required
 from extensions import app
@@ -7,11 +7,19 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 
-
+@app.route("/admin")
+@login_required
+def admin():
+    id = current_user.id
+    if id == 25:
+      return render_template("admin.html", title="ადმინის გვერდი - ვეფხისტყაოსანი")
+    else:
+        flash("Sorry but you are not the admin")
+        return redirect(url_for('index'))
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('404.html'), 404
+    return render_template('404.html', title="404 - ვეფხისტყაოსანი"), 404
 
 @app.route("/")
 def index():
