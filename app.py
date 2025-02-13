@@ -5,13 +5,22 @@ from extensions import app
 from models import User
 from werkzeug.security import check_password_hash, generate_password_hash
 
+@app.route("/admin/users")
+@login_required
+def view_users():
+    if current_user.id == 1:  # მხოლოდ თუ ადმინისტრატორი
+        users = User.query.all()  # ყველა მომხმარებლის გამოტანა
+        return render_template("admin_users.html", users=users, title="მონაცემების ხილვა")
+    else:
+        flash("Sorry, you are not authorized to view this page.")
+        return redirect(url_for('index'))
 
 
 @app.route("/admin")
 @login_required
 def admin():
     id = current_user.id
-    if id == 1:
+    if id == 25:
       return render_template("admin.html", title="ადმინის გვერდი - ვეფხისტყაოსანი")
     else:
         flash("Sorry but you are not the admin")
