@@ -3,14 +3,57 @@
 {% block content %}
 <h2>ადმინის გვერდი</h2>
 <p>თქვენ შეგიძლიათ დაამატოთ ან გააძევოთ მომხმარებლები</p>
+
 <style>
-    h2, p{
+    body {
+        background-color: #f4f4f4;
         font-family: "BPG Classic Medium", sans-serif;
-        font-weight: bold;
+        color: #444;
     }
 
+    h2 {
+        font-size: 36px;
+        color: #2c3e50;
+        text-align: center;
+        margin-top: 50px;
+        text-transform: uppercase;
+    }
 
+    p {
+        font-size: 18px;
+        color: #7f8c8d;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        font-size: 16px;
+        text-align: center;
+        color: white;
+        background-color: #2980b9;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        margin: 0 auto;
+    }
+
+    .btn:hover {
+        background-color: #3498db;
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .btn:active {
+        background-color: #1d6fa5;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(2px);
+    }
 </style>
-<a href="{{ url_for('view_users') }}" class="btn btn-primary btn-lg">დარეგისტრირებული მომხმარებლების ხილვა</a>
+
+<a href="{{ url_for('view_users') }}" class="btn">დარეგისტრირებული მომხმარებლების ხილვა</a>
 
 {% endblock %}
