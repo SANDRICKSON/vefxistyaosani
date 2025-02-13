@@ -11,7 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 @login_required
 def admin():
     id = current_user.id
-    if id == 25:
+    if id == 1:
       return render_template("admin.html", title="ადმინის გვერდი - ვეფხისტყაოსანი")
     else:
         flash("Sorry but you are not the admin")
