@@ -13,7 +13,16 @@ def view_users():
         return render_template("admin_users.html", users=users, title="მონაცემების ხილვა")
     else:
         flash("Sorry, you are not authorized to view this page.")
-        return redirect(url_for('index'))
+        return redirect(url_for('noadmin'))
+
+
+@app.route("/403")
+@login_required
+def noadmin():
+    return render_template("403.html", title="აკრძალული წვდომა - ვეეფხისტყაოსანი")
+
+
+
 
 
 @app.route("/admin")
@@ -24,7 +33,7 @@ def admin():
       return render_template("admin.html", title="ადმინის გვერდი - ვეფხისტყაოსანი")
     else:
         flash("Sorry but you are not the admin")
-        return redirect(url_for('index'))
+        return redirect(url_for('noadmin'))
 
 @app.errorhandler(404)
 def page_not_found(error):
