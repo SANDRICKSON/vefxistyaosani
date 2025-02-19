@@ -5,7 +5,7 @@
     <div class="card p-4 shadow-lg">
         <h2 class="text-center mb-4">⚙️ პარამეტრები</h2>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">  <!-- ✅ enctype დაემატა -->
             {{ form.hidden_tag() }}
 
             <!-- მომხმარებლის სახელი -->
@@ -43,6 +43,18 @@
                         </div>
                     {% endfor %}
                 </div>
+            </div>
+
+            <hr>
+
+            <!-- 📌 პროფილის სურათის ატვირთვა -->
+            <div class="mb-3">
+                {{ form.avatar.label(class="form-label") }}
+                {{ form.avatar(class="form-control") }}
+                {% if current_user.avatar %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.avatar) }}" 
+                         alt="პროფილის სურათი" class="img-thumbnail mt-2" style="max-width: 150px;">
+                {% endif %}
             </div>
 
             <hr>
@@ -89,6 +101,11 @@
 
     .input-group button {
         border-radius: 0 5px 5px 0;
+    }
+
+    .img-thumbnail {
+        display: block;
+        margin-top: 10px;
     }
 </style>
 
