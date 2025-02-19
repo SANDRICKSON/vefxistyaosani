@@ -1,6 +1,6 @@
 from wtforms.validators import Optional
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField, RadioField, EmailField,TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField, RadioField, EmailField,TextAreaField,FileField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 
@@ -73,5 +73,5 @@ class FormUpdateForm(FlaskForm):
     
     password = PasswordField("ახალი პაროლი", validators=[Optional()])
     confirm_password = PasswordField("გაიმეორეთ პაროლი", validators=[Optional(), EqualTo('password', message="პაროლები არ ემთხვევა")])
-    
+    avatar = FileField("პროფილის სურათი")
     submit = SubmitField("განახლება")
