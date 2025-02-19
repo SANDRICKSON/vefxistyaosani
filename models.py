@@ -24,6 +24,7 @@ class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
     gender = db.Column(db.String)
     birthday = db.Column(db.Date)
     is_verified = db.Column(db.Boolean, default=False)
+    avatar = db.Column(db.String(255), nullable=True, default='default.png')
 
 
     @login_manager.user_loader  # Moved outside the class
