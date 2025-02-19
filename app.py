@@ -5,6 +5,9 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from extensions import app, mail,db
+from werkzeug.utils import secure_filename
+import os
+
 from models import User
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm, FormUpdateForm
 
@@ -12,6 +15,9 @@ from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswo
 # 📌 Email ვერიფიკაციის ტოკენის გენერაცია
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @app.after_request
@@ -24,6 +30,12 @@ def add_security_headers(response):
 
 
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+# 📌 Email ვერიფიკაციის ტოკენის გენერაცია
+s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
 @app.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():
@@ -33,17 +45,21 @@ def settings():
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.birthday = form.birthday.data
-        
-            
-        current_user.password=form.password.data,
-        
-        current_user.country=form.country.data,
-        current_user.gender=form.gender.data,
-            
+        current_user.country = form.country.data
+        current_user.gender = form.gender.data
 
-        # თუ მომხმარებელმა პაროლის შეცვლა გადაწყვიტა
+        # 📌 თუ მომხმარებელმა პაროლის შეცვლა გადაწყვიტა
         if form.password.data:
             current_user.password = generate_password_hash(form.password.data)
+
+        # 📌 სურათის ატვირთვა
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                current_user.avatar = filename  # ✅ პროფილის სურათის განახლება
 
         db.session.commit()
         flash("მონაცემები წარმატებით განახლდა!", "success")
