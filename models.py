@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from extensions import db, login_manager
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -43,3 +45,13 @@ class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
     
     def check_password(self, password):
         return check_password_hash(self._password, password)
+
+
+
+
+class ContactMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(120))
+    message = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)

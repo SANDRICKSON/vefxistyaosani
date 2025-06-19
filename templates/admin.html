@@ -4,7 +4,8 @@
 <div class="admin-container">
     <h2>ადმინის გვერდი</h2>
     <p>თქვენ შეგიძლიათ დაამატოთ ან გააძევოთ მომხმარებლები</p>
-    <a href="{{ url_for('view_users') }}" class="btn">დარეგისტრირებული მომხმარებლების ხილვა</a>
+    <a href="{{ url_for('view_users') }}" class="btn btn-primary">დარეგისტრირებული მომხმარებლების ხილვა</a>
+    <a href="{{ url_for('view_messages') }}" class="btn btn-success">შეტყობინებების ხილვა</a>
 </div>
 
 <style>
@@ -44,7 +45,6 @@
         padding: 12px;
         font-size: 16px;
         color: white;
-        background-color: #2980b9;
         border-radius: 30px;
         text-decoration: none;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -52,14 +52,30 @@
         margin: 20px auto 0;
     }
 
-    .btn:hover {
+    .btn-primary {
+        background-color: #2980b9;
+    }
+    .btn-primary:hover {
         background-color: #3498db;
         box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
         transform: translateY(-2px);
     }
-
-    .btn:active {
+    .btn-primary:active {
         background-color: #1d6fa5;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(2px);
+    }
+
+    .btn-success {
+        background-color: #27ae60;
+    }
+    .btn-success:hover {
+        background-color: #2ecc71;
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+    .btn-success:active {
+        background-color: #219150;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transform: translateY(2px);
     }

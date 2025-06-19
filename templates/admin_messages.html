@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .message-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-family: "BPG Classic Medium", sans-serif;
+  }
+
+  .message-container h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  thead {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  th, td {
+    padding: 16px;
+    text-align: left;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  td {
+    color: #444;
+    font-size: 15px;
+    vertical-align: top;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>
+
+<div class="message-container">
+  <h2>📥 მიღებული შეტყობინებები</h2>
+
+  {% if messages %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>სახელი</th>
+        <th>ელ-ფოსტა</th>
+        <th>შეტყობინება</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for msg in messages %}
+      <tr>
+        <td>{{ msg.id }}</td>
+        <td>{{ msg.name }}</td>
+        <td>{{ msg.email }}</td>
+        <td>{{ msg.message }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>ჯერჯერობით შეტყობინებები არ არსებობს.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -8,7 +8,7 @@ from extensions import app, mail,db
 from werkzeug.utils import secure_filename
 import os
 
-from models import User
+from models import User, ContactMessage
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm, FormUpdateForm
 
 
@@ -113,7 +113,7 @@ def unauthorized(error):
     return render_template('401.html', title="არაავტორიზირებული მომხმარებელი - ვეფხისტყაოსანი"), 401
 
 @app.errorhandler(500)
-def unauthorized(error):
+def internal_server_error(error):
     return render_template('500.html', title="სერვერის შეცდომა - ვეფხისტყაოსანი"), 500
 
 # 502 - Bad Gateway
@@ -208,6 +208,10 @@ def view_users():
         return redirect(url_for('noadmin'))
 
 
+@app.route("/chatbot")
+def chatbot():
+    return render_template("chatbot.html",title="ჩეთბოტი - ვეფხისტყაოსანი")
+
 
 @app.route("/admin")
 @login_required
@@ -239,8 +243,29 @@ def about():
 def contact():
     form = MessageForm()
     if form.validate_on_submit():
-        print(form.message.data)
+        # Save to database
+        new_message = ContactMessage(
+            name=form.name.data,
+            email=form.email.data,
+            message=form.message.data
+        )
+        db.session.add(new_message)
+        db.session.commit()
+
+        # Send email
+        msg = Message(
+            subject="ახალი კონტაქტის შეტყობინება",
+            sender="vepkhistyaosaniproject@gmail.com",
+            recipients=["vepkhistyaosaniproject@gmail.com"],
+            body=f"მომხმარებელი: {form.name.data}\nელფოსტა: {form.email.data}\n\nშეტყობინება:\n{form.message.data}"
+        )
+        mail.send(msg)
+
+        flash("შეტყობინება წარმატებით გაიგზავნა!", "success")
+        return redirect(url_for("contact"))
+
     return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
+
 
 @app.route("/author")
 def author():
@@ -282,21 +307,28 @@ def profile():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            password=form.password.data,
-            birthday=form.birthday.data,
-            country=form.country.data,
-            gender=form.gender.data,
-            is_verified=False
-        )
-        user.create()
-        send_verification_email(user.email)
-        flash("თქვენს ელფოსტაზე გაგზავნილია ვერიფიკაციის ბმული!", "info")
-        return redirect(url_for("login"))
-    
-    print(form.errors) 
+        try:
+            user = User(
+                username=form.username.data,
+                email=form.email.data,
+                password=form.password.data,
+                birthday=form.birthday.data,
+                country=form.country.data,
+                gender=form.gender.data,
+                is_verified=False
+            )
+            user.create()
+            send_verification_email(user.email)
+            flash("თქვენს ელფოსტაზე გაგზავნილია ვერიფიკაციის ბმული!", "info")
+            return redirect(url_for("login"))
+        except Exception as e:
+            # აქ გამოიტანს ლოგში რა მოხდა ზუსტად
+            app.logger.error(f"Register error: {e}")
+            flash("რეგისტრაციის დროს შეცდომა მოხდა. გთხოვთ სცადოთ ისევ.", "danger")
+
+    if form.errors:
+        app.logger.error(f"Validation errors: {form.errors}")
+
     return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
 
@@ -304,5 +336,57 @@ def register():
 def privacy():
     return render_template("privacy.html", title="უსაფრთხოების პოლიტიკა - ვეფხისტყაოსანი")
 
+@app.route("/admin/messages")
+@login_required
+def view_messages():
+    if current_user.username != "sandroqatamadze":
+        flash("არ გაქვთ წვდომა!", "danger")
+        return redirect(url_for("noadmin"))
+
+    messages = ContactMessage.query.order_by(ContactMessage.id.desc()).all()
+    return render_template("admin_messages.html", messages=messages, title="კონტაქტის შეტყობინებები")
+
+
+@app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    # მხოლოდ ადმინს აქვს წაშლის უფლება
+    if current_user.username != "sandroqatamadze":
+        flash("თქვენ არ გაქვთ წაშლის უფლება.", "danger")
+        return redirect(url_for('view_users'))
+
+    user = User.query.get_or_404(user_id)
+
+    # Prevent admin deleting self accidentally
+    if user.username == "sandroqatamadze":
+        flash("ადმინის ანგარიშის წაშლა არ შეიძლება.", "warning")
+        return redirect(url_for('view_users'))
+
+    try:
+        # გაგზავნა მომხმარებელს
+        msg = Message(
+            subject="ანგარიშის წაშლა",
+            recipients=[user.email],
+            sender="vepkkhistyaosaniproject@gmail.com",
+            body=(
+                f"გამარჯობა, {user.username}!\n\n"
+                "ვწუხვართ, რომ თქვენი ანგარიში ადმინისტრატორის გადაწყვეტილებით წაიშალა.\n"
+                "თუ გაქვთ კითხვები, დაგვიკავშირდით.\n\n"
+                "გმადლობთ,\n პატივისცემით - სანდრო ქათამაძე პროექტის ავტორი"
+            )
+        )
+        mail.send(msg)
+
+        # წაშლა ბაზიდან
+        db.session.delete(user)
+        db.session.commit()
+
+        flash(f"მომხმარებელი {user.username} წარმატებით წაშლილია და ინფორმირებული იქნა მეილზე.", "success")
+
+    except Exception as e:
+        app.logger.error(f"Error deleting user or sending email: {e}")
+        flash("შეცდომა მოხდა მომხმარებლის წაშლის ან მეილის გაგზავნის დროს.", "danger")
+
+    return redirect(url_for('view_users'))
 if __name__ == "__main__":  
     app.run(debug=True)

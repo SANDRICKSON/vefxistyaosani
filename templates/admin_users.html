@@ -1,38 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center text-primary mb-4">დარეგისტრირებული მომხმარებლები</h1>
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <table class="table table-hover table-striped">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">მომხმარებლის სახელი</th>
-                            <th scope="col">ქვეყანა</th>
-                            <th scope="col">სქესი</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.country }}</td>
-                            <td>{{ user.gender }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">დარეგისტრირებული მომხმარებლები</h1>
+
+    <div class="card shadow-lg rounded-4">
+        <div class="card-body">
+            <table class="table table-hover table-striped align-middle">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">მომხმარებლის სახელი</th>
+                        <th scope="col">ქვეყანა</th>
+                        <th scope="col">სქესი</th>
+                        <th scope="col">როლი</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.country or '-' }}</td>
+                        <td>{{ user.gender or '-' }}</td>
+                        <td>
+                            {% if user.username != 'sandroqatamadze' %}
+                            <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('ნამდვილად გსურს მომხმარებლის წაშლა?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">წაშლა</button>
+                            </form>
+                            {% else %}
+                            <span class="text-muted">ადმინი</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
-    <style>
-        .thead-dark,h1{
-            font-family: "BPG Classic Medium", sans-serif;
-            font-weight: bold;
-        }
-    </style>
+<style>
+    h1 {
+        font-family: "BPG Nino Mtavruli", sans-serif;
+        font-weight: 700;
+    }
+
+    table th, table td {
+        vertical-align: middle !important;
+    }
+
+    .btn-outline-danger {
+        transition: 0.3s ease;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
 {% endblock %}
