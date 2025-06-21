@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="chapter-container">
+    <h1 class="chapter-title">თავი {{ chapter_id }}</h1>
+
+    <div class="chapter-content">
+        <pre>{{ content }}</pre>
+    </div>
+
+    <a class="back-link" href="{{ url_for('poem') }}">⬅︎ უკან თავების სიაში</a>
+</div>
+
+<style>
+    .chapter-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        font-family: "BPG Classic Medium", sans-serif;
+        text-align: center;
+    }
+
+    .chapter-title {
+        font-size: 32px;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .chapter-content {
+        text-align: left;
+        background: #f9f9f9;
+        padding: 25px;
+        border-radius: 12px;
+        font-size: 18px;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        color: #444;
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 30px;
+        text-decoration: none;
+        color: #2575fc;
+        font-weight: bold;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .back-link:hover {
+        color: #6a11cb;
+    }
+</style>
+{% endblock %}
+
+

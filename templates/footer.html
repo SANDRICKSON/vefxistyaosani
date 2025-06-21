@@ -1,0 +1,40 @@
+<!-- footer.html -->
+<footer class="bg-dark text-light py-4 mt-5">
+  <div class="container text-center">
+    <div class="mb-3">
+      <a href="https://facebook.com" target="_blank" class="text-light mx-3 fs-4">
+        <i class="fab fa-facebook"></i>
+      </a>
+      <a href="https://twitter.com" target="_blank" class="text-light mx-3 fs-4">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://instagram.com" target="_blank" class="text-light mx-3 fs-4">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://github.com" target="_blank" class="text-light mx-3 fs-4">
+        <i class="fab fa-github"></i>
+      </a>
+
+      <a href="https://www.tbceducation.ge/" target="_blank" class="text-light mx-3 fs-4">
+        <img src="{{ url_for('static', filename='tbc-logo.png') }}" class="image" alt="TBC Logo">
+      </a>
+    </div>
+    <p class="mb-0" style="font-family: 'BPG Classic Medium', sans-serif;">
+      &copy; 2025 ვეფხისტყაოსანი. ყველა უფლება დაცულია.
+    </p>
+  </div>
+</footer>
+
+<style>
+  footer a:hover {
+    color: #d9534f !important;
+    text-decoration: none;
+  }
+
+  footer a img.image {
+    width: 40px;
+    height: auto;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+</style>
