@@ -15,86 +15,96 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}"><b>ვეფხისტყაოსანი</b></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">მთავარი</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'author' %}active{% endif %}" href="{{ url_for('author') }}">ავტორი</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'poem' %}active{% endif %}" href="{{ url_for('poem') }}">პოემა</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'update' %}active{% endif %}" href="{{ url_for('update') }}">გააგრძელე ვეფხისტყაოსანი</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">კონტაქტი</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">პროექტის შესახებ</a>
-                    </li>
-                    {% if current_user.username == "sandroqatamadze" %}
-    <li class="nav-item">
-        <a class="nav-link {% if request.endpoint == 'admin' %}active{% endif %}" href="{{ url_for('admin') }}">ადმინი</a>
-    </li>
-{% endif %}
+   <nav class="navbar navbar-expand-lg sticky-top shadow-sm" style="background: linear-gradient(to right, #141e30, #243b55);">
+  <div class="container">
+    <a class="navbar-brand text-white" href="{{ url_for('index') }}" style="font-family: 'BPG Classic Medium'; font-size: 28px;">
+      <i class="fas fa-feather-alt me-2"></i>ვეფხისტყაოსანი
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-                    
-                    {% if current_user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" href="{{ url_for('profile') }}">პროფილი</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if request.endpoint == 'logout' %}active{% endif %}" href="{{ url_for('logout') }}">გასვლა</a>
-    </li>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
 
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">მთავარი</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'author' %}active{% endif %}" href="{{ url_for('author') }}">ავტორი</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'poem' %}active{% endif %}" href="{{ url_for('poem') }}">პოემა</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'update' %}active{% endif %}" href="{{ url_for('update') }}">გააგრძელე ვეფხისტყაოსანი</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">კონტაქტი</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">პროექტის შესახებ</a>
+        </li>
 
-{% else %}
-    <li class="nav-item">
-        <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}">შესვლა</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">რეგისტრაცია</a>
-    </li>
-{% endif %}
+        {% if current_user.username == "sandroqatamadze" %}
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'admin' %}active{% endif %}" href="{{ url_for('admin') }}">ადმინი</a>
+        </li>
+        {% endif %}
 
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <style>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" href="{{ url_for('profile') }}">პროფილი</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('logout') }}">გასვლა</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}">შესვლა</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">რეგისტრაცია</a>
+        </li>
+        {% endif %}
 
+      </ul>
+    </div>
+  </div>
+</nav>
 
-       .nav-item {
-    font-family: "BPG Classic Medium", sans-serif;
-    font-size: 20px;
-}
+<style>
+  .navbar-nav .nav-link {
+    color: #ddd;
+    font-family: 'BPG Classic Medium', sans-serif;
+    font-size: 18px;
+    transition: color 0.3s ease;
+  }
 
-        .navbar-brand{
-            font-family: "BPG Classic Medium", sans-serif;
-            font-size:30px;
-        }
+  .navbar-nav .nav-link:hover {
+    color: #ff7043 !important;
+  }
 
-        .nav-link.active {
+  .navbar-nav .nav-link.active {
     font-weight: bold;
-    color: #d9534f !important; /* გამოკვეთილი ფერი */
-    border-bottom: 2px solid #d9534f;
-}
+    color: #ff7043 !important;
+    border-bottom: 2px solid #ff7043;
+  }
 
-        a,li{
-        font-family: "BPG Classic Medium", sans-serif;
-        font-weight: bold;
-    }
+  .navbar {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-    </style>
+  .navbar-brand i {
+    color: #ff7043;
+  }
+
+  .navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+</style>
+
     {% block content %}
     {% endblock %}
 {% include "footer.html" %}
