@@ -1,40 +1,61 @@
-<!-- footer.html -->
-<footer class="bg-dark text-light py-4 mt-5">
+
+<footer class="bg-dark text-light py-5 mt-5 shadow-lg">
   <div class="container text-center">
-    <div class="mb-3">
-      <a href="https://facebook.com" target="_blank" class="text-light mx-3 fs-4">
-        <i class="fab fa-facebook"></i>
+
+    <div class="mb-4">
+      <a href="https://facebook.com" target="_blank" class="social-icon">
+        <i class="fab fa-facebook-f"></i>
       </a>
-      <a href="https://twitter.com" target="_blank" class="text-light mx-3 fs-4">
+      <a href="https://twitter.com" target="_blank" class="social-icon">
         <i class="fab fa-twitter"></i>
       </a>
-      <a href="https://instagram.com" target="_blank" class="text-light mx-3 fs-4">
+      <a href="https://instagram.com" target="_blank" class="social-icon">
         <i class="fab fa-instagram"></i>
       </a>
-      <a href="https://github.com" target="_blank" class="text-light mx-3 fs-4">
+      <a href="https://github.com" target="_blank" class="social-icon">
         <i class="fab fa-github"></i>
       </a>
-
-      <a href="https://www.tbceducation.ge/" target="_blank" class="text-light mx-3 fs-4">
-        <img src="{{ url_for('static', filename='tbc-logo.png') }}" class="image" alt="TBC Logo">
+      <a href="https://www.tbceducation.ge/" target="_blank" class="social-icon">
+        <img src="{{ url_for('static', filename='tbc-logo.png') }}" alt="TBC" class="tbc-logo">
       </a>
     </div>
-    <p class="mb-0" style="font-family: 'BPG Classic Medium', sans-serif;">
-      &copy; 2025 ვეფხისტყაოსანი. ყველა უფლება დაცულია.
+
+    <p class="mb-0 small" style="font-family: 'BPG Classic Medium', sans-serif;">
+      © 2025 <strong>ვეფხისტყაოსანი</strong> | ყველა უფლება დაცულია | შექმნილია სიყვარულით 💙
     </p>
   </div>
 </footer>
 
 <style>
-  footer a:hover {
+  .social-icon {
+    color: #ffffff;
+    margin: 0 12px;
+    font-size: 1.6rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+  }
+
+  .social-icon:hover {
     color: #d9534f !important;
+    transform: scale(1.2);
     text-decoration: none;
   }
 
-  footer a img.image {
-    width: 40px;
+  .tbc-logo {
+    width: 38px;
     height: auto;
     vertical-align: middle;
-    margin-left: 5px;
+    transition: transform 0.3s ease;
+    filter: grayscale(100%) brightness(90%);
+  }
+
+  .tbc-logo:hover {
+    transform: scale(1.2);
+    filter: grayscale(0%) brightness(100%);
+  }
+
+  footer {
+    background: linear-gradient(to right, #111, #222);
+    border-top: 2px solid #d9534f;
   }
 </style>
