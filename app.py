@@ -480,7 +480,7 @@ def delete_message(message_id):
 @app.route("/characters")
 def characters():
     characters = Character.query.all()
-    return render_template("characters.html", characters=characters)
+    return render_template("characters.html", characters=characters,title="პერსონაჟები - ვეფხისტყაოსანი")
 
 
 if __name__ == "__main__":
