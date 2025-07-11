@@ -8,7 +8,7 @@ from extensions import app, mail,db
 from werkzeug.utils import secure_filename
 import os
 
-from models import User, ContactMessage
+from models import User, ContactMessage, Character
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm, FormUpdateForm
 
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -273,15 +273,36 @@ def poem():
     return render_template("poem.html", chapters=chapters,title="პოემა - ვეფხისტყაოსანი")
 
 
+
+chapter_titles = {
+    1: "პროლოგი",
+    2: "ამბავი როსტევან არაბთა მეფისა",
+    3: "როსტევან მეფისაგან და ავთანდილისაგან ნადირობა",
+}
+
 @app.route("/poem/chapter/<int:chapter_id>")
 def chapter_page(chapter_id):
     filename = os.path.join(CHAPTERS_DIR, f"{chapter_id}.txt")
     if not os.path.exists(filename):
         os.abort(404)
+
     with open(filename, encoding="utf-8") as f:
         content = f.read()
-    page_title = f"თავი {chapter_id} - ვეფხისტყაოსანი"
-    return render_template("chapter.html", chapter_id=chapter_id, content=content, page_title=page_title)
+
+
+    chapter_title = chapter_titles.get(chapter_id, f"თავი {chapter_id}")
+
+    # სწორედ ეს გამოჩნდება ფანჯრის ზედა title-ში
+    page_title = f"{chapter_title} - ვეფხისტყაოსანი"
+
+    return render_template(
+        "chapter.html",
+        chapter_id=chapter_id,
+        content=content,
+        title="ვეფხისტყაოსანი",
+        chapter_title=chapter_title
+    )
+
 
 
 @app.route('/logout')
@@ -455,6 +476,11 @@ def delete_message(message_id):
     db.session.commit()
     flash("შეტყობინება წარმატებით წაიშალა!", "success")
     return redirect(url_for('view_messages'))
+
+@app.route("/characters")
+def characters():
+    characters = Character.query.all()
+    return render_template("characters.html", characters=characters)
 
 
 if __name__ == "__main__":
