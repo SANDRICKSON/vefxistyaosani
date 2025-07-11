@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="font-family: 'BPG Classic Medium', sans-serif;">ვეფხისტყაოსნის გმირები</h2>
+    <div class="row">
+        {% for character in characters|unique(attribute='name') %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ character.image_url }}" class="card-img-top" alt="{{ character.name }}">
+                <div class="card-body text-center" style="font-family: 'BPG Classic Medium', sans-serif;">
+                    <h5 class="card-title">{{ character.name }}</h5>
+                    <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#modal{{ character.id }}">
+                        გაიგე მეტი
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal{{ character.id }}" tabindex="-1" aria-labelledby="modalLabel{{ character.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="font-family: 'BPG Classic Medium', sans-serif;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel{{ character.id }}">{{ character.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="დახურვა"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ character.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<style>
+    body {
+    font-family: 'BPG Classic Medium', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content {
+    border-radius: 10px;
+}
+
+.btn-success {
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+</style>
+{% endblock %}
