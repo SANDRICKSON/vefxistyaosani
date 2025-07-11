@@ -38,7 +38,7 @@
           <a class="nav-link {% if request.endpoint == 'poem' %}active{% endif %}" href="{{ url_for('poem') }}">პოემა</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if request.endpoint == 'update' %}active{% endif %}" href="{{ url_for('update') }}">გააგრძელე ვეფხისტყაოსანი</a>
+          <a class="nav-link {% if request.endpoint == 'characters' %}active{% endif %}" href="{{ url_for('characters') }}">პერსონაჟები</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">კონტაქტი</a>
