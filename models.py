@@ -63,3 +63,10 @@ class Character(db.Model):
     name = db.Column(db.String(100), nullable=False)
     image_url = db.Column(db.String(300), nullable=True)
     description = db.Column(db.Text, nullable=False)
+
+
+class ChapterAudio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    youtube_link = db.Column(db.String(255))
