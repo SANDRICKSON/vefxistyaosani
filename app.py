@@ -181,7 +181,7 @@ def confirm_email(token):
 @app.route("/admin/users")
 @login_required
 def view_users():
-    if current_user.username == "sandroqatamadze":
+    if current_user.role == "admin":
         users = User.query.all()
         return render_template("admin_users.html", users=users, title="მონაცემების ხილვა")
     else:
@@ -195,7 +195,7 @@ def chatbot():
 @app.route("/admin")
 @login_required
 def admin():
-    if current_user.username == "sandroqatamadze":
+    if current_user.role == "admin":
         return render_template("admin.html", title="ადმინის გვერდი - ვეფხისტყაოსანი")
     else:
         flash("Sorry but you are not the admin")
@@ -355,7 +355,7 @@ def privacy():
 @app.route("/admin/messages")
 @login_required
 def view_messages():
-    if current_user.username != "sandroqatamadze":
+    if current_user.role != "admin":
         flash("არ გაქვთ წვდომა!", "danger")
         return redirect(url_for("noadmin"))
 
@@ -485,7 +485,7 @@ def characters():
 @app.route('/add-character', methods=['POST'])
 @login_required
 def add_character():
-    if current_user.username != 'sandroqatamadze':
+    if current_user.role != 'admin':
         flash('მხოლოდ ადმინისტრატორს შეუძლია პერსონაჟის დამატება.')
         return redirect(url_for('characters'))
 
@@ -502,7 +502,7 @@ def add_character():
 @app.route('/edit-character/<int:character_id>', methods=['GET', 'POST'])
 @login_required
 def edit_character(character_id):
-    if current_user.username != 'sandroqatamadze':
+    if current_user.role != 'admin':
         os.abort(403)
     character = Character.query.get_or_404(character_id)
     if request.method == 'POST':
@@ -516,7 +516,7 @@ def edit_character(character_id):
 @app.route('/delete-character/<int:character_id>', methods=['POST'])
 @login_required
 def delete_character(character_id):
-    if current_user.username != 'sandroqatamadze':
+    if current_user.role != 'admin':
         os.abort(403)
     character = Character.query.get_or_404(character_id)
     db.session.delete(character)
