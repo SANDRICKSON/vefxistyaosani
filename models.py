@@ -17,10 +17,10 @@ class BaseModel:
     def save():
         db.session.commit()
 
-class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
+class User(db.Model, BaseModel, UserMixin):  
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)  
-    email = db.Column(db.String, nullable=False, unique=True)  # დაამატე email ველი
+    email = db.Column(db.String, nullable=False, unique=True)  
     _password = db.Column(db.String, nullable=False)  
     country = db.Column(db.String)
     gender = db.Column(db.String)
@@ -29,26 +29,22 @@ class User(db.Model, BaseModel, UserMixin):  # Fixed class definition order
     avatar = db.Column(db.String(255), nullable=True, default='default.png')
     role = db.Column(db.String(10), default='user')
 
-
-    @login_manager.user_loader  # Moved outside the class
+    @login_manager.user_loader  
     def load_user(user_id):
        return User.query.get(user_id)
 
     @property
     def password(self):
         return self._password
-    
+
     @password.setter
     def password(self, value):
         if not value:
             raise ValueError("Password cannot be empty.")
         self._password = generate_password_hash(value)
-    
+
     def check_password(self, password):
         return check_password_hash(self._password, password)
-
-
-
 
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,13 +53,11 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_url = db.Column(db.String(300), nullable=True)
     description = db.Column(db.Text, nullable=False)
-
 
 class ChapterAudio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
