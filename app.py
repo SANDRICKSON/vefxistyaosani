@@ -482,6 +482,46 @@ def characters():
     characters = Character.query.all()
     return render_template("characters.html", characters=characters,title="პერსონაჟები - ვეფხისტყაოსანი")
 
+@app.route('/add-character', methods=['POST'])
+@login_required
+def add_character():
+    if current_user.username != 'sandroqatamadze':
+        flash('მხოლოდ ადმინისტრატორს შეუძლია პერსონაჟის დამატება.')
+        return redirect(url_for('characters'))
+
+    name = request.form['name']
+    description = request.form['description']
+    image_url = request.form['image_url']
+
+    new_char = Character(name=name, description=description, image_url=image_url)
+    db.session.add(new_char)
+    db.session.commit()
+    flash('პერსონაჟი წარმატებით დაემატა!')
+    return redirect(url_for('characters'))
+
+@app.route('/edit-character/<int:character_id>', methods=['GET', 'POST'])
+@login_required
+def edit_character(character_id):
+    if current_user.username != 'sandroqatamadze':
+        os.abort(403)
+    character = Character.query.get_or_404(character_id)
+    if request.method == 'POST':
+        character.name = request.form['name']
+        character.description = request.form['description']
+        character.image_url = request.form['image_url']
+        db.session.commit()
+        return redirect(url_for('characters'))
+    return render_template('edit_character.html', character=character,title="პერსონაჟის რედაქტირება - ვეფხისტყაოსანი")
+
+@app.route('/delete-character/<int:character_id>', methods=['POST'])
+@login_required
+def delete_character(character_id):
+    if current_user.username != 'sandroqatamadze':
+        os.abort(403)
+    character = Character.query.get_or_404(character_id)
+    db.session.delete(character)
+    db.session.commit()
+    return redirect(url_for('characters'))
 
 if __name__ == "__main__":
     app.run(debug=True)
