@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="font-family: 'BPG Classic Medium', sans-serif;">
+    <h2>პერსონაჟის რედაქტირება</h2>
+    <form method="POST" action="{{ url_for('edit_character', character_id=character.id) }}">
+        <div class="mb-3">
+            <label for="name" class="form-label">სახელი</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ character.name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">აღწერა</label>
+            <textarea class="form-control" id="description" name="description" rows="5" required>{{ character.description }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="image_url" class="form-label">სურათის ბმული</label>
+            <input type="url" class="form-control" id="image_url" name="image_url" value="{{ character.image_url }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">შენახვა</button>
+        <a href="{{ url_for('characters') }}" class="btn btn-secondary">გაუქმება</a>
+    </form>
+</div>
+{% endblock %}
