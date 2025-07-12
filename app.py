@@ -8,7 +8,7 @@ from extensions import app, mail,db
 from werkzeug.utils import secure_filename
 import os
 
-from models import User, ContactMessage, Character
+from models import User, ContactMessage, Character, ChapterAudio
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm, FormUpdateForm
 
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -282,6 +282,7 @@ chapter_titles = {
 
 @app.route("/poem/chapter/<int:chapter_id>")
 def chapter_page(chapter_id):
+    chapter_audio = ChapterAudio.query.filter_by(id=chapter_id).first()
     filename = os.path.join(CHAPTERS_DIR, f"{chapter_id}.txt")
     if not os.path.exists(filename):
         os.abort(404)
@@ -300,7 +301,8 @@ def chapter_page(chapter_id):
         chapter_id=chapter_id,
         content=content,
         title="ვეფხისტყაოსანი",
-        chapter_title=chapter_title
+        chapter_title=chapter_title,
+        chapter_audio = chapter_audio
     )
 
 
