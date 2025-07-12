@@ -1,22 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4" style="font-family: 'BPG Classic Medium', sans-serif;">ვეფხისტყაოსნის გმირები</h2>
+    <h2 class="text-center mb-4" style="font-family: 'BPG Classic Medium', sans-serif;">
+        ვეფხისტყაოსნის გმირები
+    </h2>
+
+    {% if current_user.is_authenticated and current_user.username == 'sandroqatamadze' %}
+    <div class="text-end mb-4">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCharacterModal">
+            + პერსონაჟის დამატება
+        </button>
+    </div>
+    {% endif %}
+
     <div class="row">
         {% for character in characters|unique(attribute='name') %}
         <div class="col-md-4 mb-4">
-            <div class="card shadow-lg border-0 h-100">
+            <div class="card shadow-sm border-0 h-100">
                 <img src="{{ character.image_url }}" class="card-img-top" alt="{{ character.name }}">
                 <div class="card-body text-center" style="font-family: 'BPG Classic Medium', sans-serif;">
                     <h5 class="card-title">{{ character.name }}</h5>
+                    <p class="card-text">{{ character.description[:100] }}...</p>
                     <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#modal{{ character.id }}">
                         გაიგე მეტი
                     </button>
+                    
+                    {% if current_user.is_authenticated and current_user.username == 'sandroqatamadze' %}
+                    <div class="mt-2">
+                        <a href="{{ url_for('edit_character', character_id=character.id) }}" class="btn btn-warning btn-sm">✏️</a>
+                        <form method="POST" action="{{ url_for('delete_character', character_id=character.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('დარწმუნებული ხარ?')">🗑️</button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Modal -->
+        <!-- დეტალების მოდალი -->
         <div class="modal fade" id="modal{{ character.id }}" tabindex="-1" aria-labelledby="modalLabel{{ character.id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="font-family: 'BPG Classic Medium', sans-serif;">
@@ -32,38 +53,70 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if current_user.is_authenticated and current_user.username == 'sandroqatamadze' %}
+    <!-- დამატების მოდალი -->
+    <div class="modal fade" id="addCharacterModal" tabindex="-1" aria-labelledby="addCharacterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="POST" action="{{ url_for('add_character') }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCharacterModalLabel">ახალი პერსონაჟის დამატება</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="დახურვა"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">სახელი</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">აღწერა</label>
+                        <textarea name="description" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">სურათის ბმული</label>
+                        <input type="url" name="image_url" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">დამატება</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
 </div>
+
+<!-- სტილები -->
 <style>
     body {
-    font-family: 'BPG Classic Medium', sans-serif;
-    background-color: #f8f9fa;
-    color: #212529;
-}
+        font-family: 'BPG Classic Medium', sans-serif;
+        background-color: #f8f9fa;
+        color: #212529;
+    }
 
-.card-title {
-    font-size: 20px;
-    font-weight: bold;
-}
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
 
-.card {
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .card {
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
 
-.modal-content {
-    border-radius: 10px;
-}
+    .modal-content {
+        border-radius: 10px;
+    }
 
-.btn-success {
-    font-size: 16px;
-    padding: 8px 16px;
-    border-radius: 8px;
-}
-
+    .btn-success {
+        font-size: 16px;
+        padding: 8px 16px;
+        border-radius: 8px;
+    }
 </style>
 {% endblock %}
