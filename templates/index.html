@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "base.html" %}
 
 {% block content %}
@@ -104,3 +105,111 @@
 </style>
 
 {% endblock %}
+=======
+{% extends "base.html" %}
+
+{% block content %}
+<header class="hero d-flex align-items-center justify-content-center text-center">
+    <div class="hero-content">
+        <h1>ვეფხისტყაოსანი – შოთა რუსთაველი</h1>
+        <p class="hero-subtitle">შუა საუკუნეების ქართული ეპოსი, რომელიც საუკუნეების განმავლობაში ინარჩუნებს მისწრაფებას თავისუფლებისა და ღირსებისაკენ.</p>
+    </div>
+</header>
+
+<section class="introduction container">
+    <div class="card shadow">
+        <h2>შესავალი</h2>
+        <p>
+            „ვეფხისტყაოსანი“ — შუა საუკუნეების ქართული ეპიკური პოემა, რომელიც შოთა რუსთაველმა დაწერა. ეს ერთ-ერთი უდიდესი ლიტერატურული ქმნილებაა, რომელიც ქართველი ხალხის კულტურისა და ისტორიის განუყოფელი ნაწილია.
+        </p>
+    </div>
+</section>
+
+<style>
+    body {
+        font-family: "BPG Classic Medium", serif;
+        background-color: #fff; /* თეთრი ფონია */
+        color: #222; /* მუქი ტექსტი */
+        margin: 0;
+        padding: 0;
+    }
+
+    .hero {
+        position: relative;
+        min-height: 40vh;
+        background-color: #fff; /* თეთრი ფონია */
+        color: #1f3c88; /* ლურჯი ტექსტი */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding: 3rem 1rem;
+        box-shadow: inset 0 -1px 4px rgba(31, 60, 136, 0.1);
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        font-weight: 400;
+        font-style: italic;
+        color: #555;
+    }
+
+    .introduction {
+        max-width: 850px;
+        margin: 3rem auto 5rem;
+        padding: 0 1rem;
+    }
+
+    .card {
+        background: #fafafa; /* ძალიან მსუბუქი ნაცრისფერი */
+        border-radius: 12px;
+        padding: 2.5rem 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.3s ease;
+        text-align: center;
+    }
+
+    .card:hover {
+        box-shadow: 0 15px 40px rgba(31, 60, 136, 0.15);
+    }
+
+    .card h2 {
+        font-size: 2.5rem;
+        color: #1f3c88; /* ლურჯი */
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        letter-spacing: 1.2px;
+    }
+
+    .card p {
+        font-size: 1.25rem;
+        line-height: 1.8;
+        color: #333; /* მუქი ნაცრისფერი */
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.2rem;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        .card h2 {
+            font-size: 2rem;
+        }
+        .card p {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+{% endblock %}
+>>>>>>> b287b411d22546cc22f84d7312ff15dc369a7f66

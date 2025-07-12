@@ -4,6 +4,12 @@
 
 {% block content %}
 <div class="chapter-container">
+<<<<<<< HEAD
+    <h1 class="chapter-title">{{ chapter_title }}</h1>
+
+   <div class="chapter-content">
+    <pre>{{ content }}</pre>
+=======
     <h1 class="chapter-title">თავი {{ chapter_id }}</h1>
 
     <div class="chapter-content">
@@ -11,6 +17,7 @@
     </div>
 
     <a class="back-link" href="{{ url_for('poem') }}">⬅︎ უკან თავების სიაში</a>
+>>>>>>> b287b411d22546cc22f84d7312ff15dc369a7f66
 </div>
 
 <style>
@@ -41,6 +48,10 @@
         white-space: pre-wrap;
         color: #444;
         box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+<<<<<<< HEAD
+        font-family: "BPG Classic Medium", sans-serif; /* ეს დაემატა აქ */
+=======
+>>>>>>> b287b411d22546cc22f84d7312ff15dc369a7f66
     }
 
     .back-link {
@@ -57,6 +68,11 @@
         color: #6a11cb;
     }
 </style>
+<<<<<<< HEAD
+
+{% endblock %}
+=======
 {% endblock %}
 
 
+>>>>>>> b287b411d22546cc22f84d7312ff15dc369a7f66
