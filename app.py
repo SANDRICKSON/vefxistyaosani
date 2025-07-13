@@ -314,7 +314,7 @@ def view_messages():
 @login_required
 def delete_user(user_id):
 
-    if current_user.username != "sandroqatamadze":
+    if current_user.role != "admin":
         flash("თქვენ არ გაქვთ წაშლის უფლება.", "danger")
         return redirect(url_for('view_users'))
 
