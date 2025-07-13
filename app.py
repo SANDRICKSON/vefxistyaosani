@@ -196,15 +196,24 @@ def author():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        # ვეძებთ მომხმარებელს ან ელფოსტით ან იუზერნეიმით
+        user = User.query.filter(
+            (User.username == form.username.data) | (User.email == form.username.data)
+        ).first()
+
         if user and check_password_hash(user.password, form.password.data):
             if not user.is_verified:
                 send_verification_email(user.email)
                 flash("თქვენს ელ-ფოსტაზე ვერიფიკაციის ბმული გაგზავნილია!", "warning")
                 return redirect(url_for('login'))
+
             login_user(user)
             return redirect(url_for("index"))
+        else:
+            flash("არასწორი მონაცემები!", "danger")
+
     return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
+
 
 
 CHAPTERS_DIR = "chapters"  # ფოლდერის სახელი
