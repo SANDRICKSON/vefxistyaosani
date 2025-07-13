@@ -5,6 +5,7 @@ from wtforms import StringField, PasswordField, SubmitField, DateField, SelectFi
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 
+
 class RegisterForm(FlaskForm):
     username = StringField("შეიყვანეთ სახელი", validators=[DataRequired(), Length(min=8, max=64)])
     email = EmailField("შეიყვანეთ ელ. ფოსტა", validators=[DataRequired(), Email()])
@@ -22,7 +23,10 @@ class RegisterForm(FlaskForm):
     ])
     gender = RadioField("აირჩიეთ სქესი",
                         choices=[("male", "კაცი"), ("female", "ქალი"), ("other", "არ არის მითითებული")])
+
+
     submit = SubmitField("რეგისტრაცია")
+
 
 
 class MessageForm(FlaskForm):
@@ -33,7 +37,8 @@ class MessageForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField("შეიყვანეთ სახელი", validators=[DataRequired(), Length(min=8, max=64)])
+    username = StringField("შეიყვანეთ მომხმარებლის სახელი ან ელფოსტა", validators=[DataRequired()])
+
 
     password = PasswordField("შეიყვანეთ პაროლი", validators=[DataRequired(), Length(min=8, max=64)])
     submit = SubmitField("ავტორიზაცია")
