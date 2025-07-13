@@ -25,6 +25,7 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.country or '-' }}</td>
                     <td>{{ user.gender or '-' }}</td>
+                    <td>{{ user.email or '-' }}</td>
 
                     <td>
                         {% if user.role == 'admin' %}
