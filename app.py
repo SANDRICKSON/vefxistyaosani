@@ -101,21 +101,21 @@ def reset_password(token):
 def unauthorized(error):
     return render_template('401.html', title="არაავტორიზირებული მომხმარებელი - ვეფხისტყაოსანი"), 401
 
-@app.errorhandler(500)
-def internal_server_error(error):
-    return render_template('500.html', title="სერვერის შეცდომა - ვეფხისტყაოსანი"), 500
+# @app.errorhandler(500)
+# def internal_server_error(error):
+#     return render_template('500.html', title="სერვერის შეცდომა - ვეფხისტყაოსანი"), 500
 
-@app.errorhandler(502)
-def bad_gateway(error):
-    return render_template('502.html',title="ცუდი კარიბჭე - ვეფხისტყაოსანი"), 502
+# @app.errorhandler(502)
+# def bad_gateway(error):
+#     return render_template('502.html',title="ცუდი კარიბჭე - ვეფხისტყაოსანი"), 502
 
-@app.errorhandler(503)
-def service_unavailable(error):
-    return render_template('503.html', title="მიუწვდომელი სერვისი - ვეფხისტყაოსანი"), 503
+# @app.errorhandler(503)
+# def service_unavailable(error):
+#     return render_template('503.html', title="მიუწვდომელი სერვისი - ვეფხისტყაოსანი"), 503
 
-@app.errorhandler(504)
-def gateway_timeout(error):
-    return render_template('504.html', title="სესიის დრო ამოიწურა - ვეფხისტყაოსანი"), 504
+# @app.errorhandler(504)
+# def gateway_timeout(error):
+#     return render_template('504.html', title="სესიის დრო ამოიწურა - ვეფხისტყაოსანი"), 504
 
 @app.route("/403")
 @login_required
