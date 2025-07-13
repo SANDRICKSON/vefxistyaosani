@@ -2,6 +2,7 @@ from flask_mail import Mail
 
 mail = Mail()
 
+
 def init_app(app):
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587

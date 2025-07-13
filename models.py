@@ -4,6 +4,7 @@ from extensions import db, login_manager
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 class BaseModel:
     def create(self):
         db.session.add(self)
@@ -17,11 +18,12 @@ class BaseModel:
     def save():
         db.session.commit()
 
-class User(db.Model, BaseModel, UserMixin):  
+
+class User(db.Model, BaseModel, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)  
-    email = db.Column(db.String, nullable=False, unique=True)  
-    _password = db.Column(db.String, nullable=False)  
+    username = db.Column(db.String, nullable=False, unique=True)
+    email = db.Column(db.String, nullable=False, unique=True)
+    _password = db.Column(db.String, nullable=False)
     country = db.Column(db.String)
     gender = db.Column(db.String)
     birthday = db.Column(db.Date)
@@ -29,9 +31,9 @@ class User(db.Model, BaseModel, UserMixin):
     avatar = db.Column(db.String(255), nullable=True, default='default.png')
     role = db.Column(db.String(10), default='user')
 
-    @login_manager.user_loader  
+    @login_manager.user_loader
     def load_user(user_id):
-       return User.query.get(user_id)
+        return User.query.get(user_id)
 
     @property
     def password(self):
@@ -46,6 +48,7 @@ class User(db.Model, BaseModel, UserMixin):
     def check_password(self, password):
         return check_password_hash(self._password, password)
 
+
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -53,11 +56,13 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_url = db.Column(db.String(300), nullable=True)
     description = db.Column(db.Text, nullable=False)
+
 
 class ChapterAudio(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -9,7 +9,7 @@
             📧 რეგისტრაციის დასრულების შემდეგ თქვენ მიიღებთ ვერიფიკაციის ბმულს მითითებულ ელ-ფოსტაზე!
         </div>
 
-        <!-- Username -->
+
         <div class="row mb-3">
             <label for="{{ form.username.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.username.label }}</label>
             <div class="col-sm-10">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <!-- Email -->
+
         <div class="row mb-3">
             <label for="{{ form.email.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.email.label }}</label>
             <div class="col-sm-10">
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- Password -->
+
         <div class="row mb-3">
             <label for="{{ form.password.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.password.label }}</label>
             <div class="col-sm-10">
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <!-- Repeat Password -->
+
         <div class="row mb-3">
             <label for="{{ form.repeat_password.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.repeat_password.label }}</label>
             <div class="col-sm-10">
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <!-- Birthday -->
+
         <div class="row mb-3">
             <label for="{{ form.birthday.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.birthday.label }}</label>
             <div class="col-sm-10">
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <!-- Country -->
+
         <div class="row mb-3">
             <label for="{{ form.country.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.country.label }}</label>
             <div class="col-sm-10">
@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        <!-- Gender -->
+
         <div class="row mb-3">
             <label for="{{ form.gender.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.gender.label }}</label>
             <div class="col-sm-10">
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <!-- Terms -->
+
         <div class="form-check mb-3">
             <input type="checkbox" class="form-check-input shadow-sm" id="agreeCheck">
             <label for="agreeCheck" class="form-check-label">
@@ -104,7 +104,7 @@
             </label>
         </div>
 
-        <!-- Submit -->
+
         <div class="row mb-3">
             <div class="col-sm-10 offset-sm-2">
                 {{ form.submit(class="btn btn-primary w-100 rounded-pill shadow-sm") }}
@@ -114,7 +114,6 @@
     </form>
 </div>
 
-<!-- ✅ Custom Styles -->
 <style>
     body {
         background: #f8f9fa;
@@ -150,7 +149,6 @@
     }
 </style>
 
-<!-- ✅ Toggle Password JS -->
 <script>
     function togglePassword(fieldId, iconId) {
         var passwordField = document.getElementById(fieldId);
@@ -168,7 +166,6 @@
     }
 </script>
 
-<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {% endblock %}

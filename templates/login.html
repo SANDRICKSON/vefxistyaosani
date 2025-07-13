@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    
+
 <div class="container border rounded shadow-lg p-4 mt-4 bg-light">
     <form method="post">
         {{ form.hidden_tag() }}
@@ -12,7 +12,6 @@
             </div>
         {% endif %}
 
-        <!-- Username -->
         <div class="row mb-3">
             <label for="{{ form.username.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.username.label }}</label>
             <div class="col-sm-10">
@@ -27,7 +26,6 @@
             </div>
         </div>
 
-        <!-- Password -->
         <div class="row mb-3">
             <label for="{{ form.password.id }}" class="col-sm-2 col-form-label fw-bold">{{ form.password.label }}</label>
             <div class="col-sm-10">
@@ -47,7 +45,6 @@
             </div>
         </div>
 
-        <!-- Submit -->
         <div class="row mb-3">
             <div class="col-sm-10 offset-sm-2">
                 {{ form.submit(class="btn btn-primary w-100 rounded-pill shadow-sm") }}
@@ -57,9 +54,8 @@
     </form>
 </div>
 
-<!-- Forgot password link -->
 <div class="text-center mt-3">
-    <a href="{{ url_for('forgot_password') }}" class="text-decoration-none text-primary fw-bold">🔑 პაროლი დაგავიწყდა?</a>
+    <a href="" class="text-decoration-none text-primary fw-bold">🔑 პაროლი დაგავიწყდა?</a>
 </div>
 
 <style>
@@ -110,7 +106,6 @@
     }
 </script>
 
-<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {% endblock %}

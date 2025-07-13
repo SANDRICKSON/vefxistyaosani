@@ -1,21 +1,20 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
-from itsdangerous import  SignatureExpired, BadTimeSignature
+from itsdangerous import SignatureExpired, BadTimeSignature
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
-from extensions import app, mail,db
+from extensions import app, mail, db
 from werkzeug.utils import secure_filename
 import os
 
 from models import User, ContactMessage, Character, ChapterAudio
-from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm, FormUpdateForm
-
-
+from forms import RegisterForm, MessageForm, LoginForm, FormUpdateForm
 
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
 
 @app.after_request
 def add_security_headers(response):
@@ -24,10 +23,13 @@ def add_security_headers(response):
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return response
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
 
 @app.route("/settings", methods=["GET", "POST"])
 @login_required
@@ -58,49 +60,12 @@ def settings():
 
     return render_template("settings.html", form=form, title="პარამეტრები - ვეფხისტყაოსანი")
 
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    form = ForgotPasswordForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            token = s.dumps(user.email, salt='password-reset')
-            reset_url = url_for('reset_password', token=token, _external=True)
-            msg = Message('პაროლის აღდგენა', recipients=[user.email])
-            msg.body = f"პაროლის აღსადგენად დააჭირეთ ამ ბმულს: {reset_url}"
-            mail.send(msg)
-            flash('ელ.ფოსტა გაგზავნილია!', 'success')
-            return redirect(url_for('login'))
-        else:
-            flash('ამ ელ.ფოსტით მომხმარებელი არ მოიძებნა.', 'danger')
-    return render_template('forgot_password.html', form=form, title="პაროლის აღდგენა - ვეფხისტყაოსანი")
-
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    try:
-        email = s.loads(token, salt='password-reset', max_age=3600)
-    except (SignatureExpired, BadTimeSignature):
-        flash('ბმული არასწორია ან ვადა გაუვიდა!', 'danger')
-        return redirect(url_for('forgot_password'))
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('მომხმარებელი ვერ მოიძებნა!', 'danger')
-        return redirect(url_for('forgot_password'))
-
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        user.password = generate_password_hash(form.password.data)
-        db.session.commit()
-        flash('პაროლი წარმატებით განახლდა!', 'success')
-        return redirect(url_for('login'))
-
     return render_template('reset_password.html', form=form)
+
 
 @app.errorhandler(401)
 def unauthorized(error):
     return render_template('401.html', title="არაავტორიზირებული მომხმარებელი - ვეფხისტყაოსანი"), 401
-
 
 
 @app.route("/403")
@@ -108,9 +73,11 @@ def unauthorized(error):
 def noadmin():
     return render_template("403.html", title="აკრძალული წვდომა - ვეფხისტყაოსანი")
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', title="გვერდი არ მოიძებნა - ვეფხისტყაოსანი"), 404
+
 
 def send_verification_email(user_email):
     token = generate_verification_token(user_email)
@@ -126,9 +93,12 @@ def send_verification_email(user_email):
     )
 
     mail.send(msg)
+
+
 def generate_verification_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     return serializer.dumps(email, salt='email-confirm')
+
 
 def confirm_verification_token(token, expiration=3600):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -138,6 +108,7 @@ def confirm_verification_token(token, expiration=3600):
         return False
     return email
 
+
 def send_verification_email(user_email):
     token = generate_verification_token(user_email)
     confirm_url = url_for('confirm_email', token=token, _external=True)
@@ -146,6 +117,7 @@ def send_verification_email(user_email):
 
     msg = Message(subject=subject, recipients=[user_email], body=message_body)
     mail.send(msg)
+
 
 @app.route('/confirm/<token>')
 def confirm_email(token):
@@ -164,6 +136,7 @@ def confirm_email(token):
 
     return redirect(url_for('login'))
 
+
 @app.route("/admin/users")
 @login_required
 def view_users():
@@ -174,9 +147,6 @@ def view_users():
         flash("Sorry, you are not authorized to view this page.")
         return redirect(url_for('noadmin'))
 
-@app.route("/chatbot")
-def chatbot():
-    return render_template("chatbot.html",title="ჩეთბოტი - ვეფხისტყაოსანი")
 
 @app.route("/admin")
 @login_required
@@ -187,26 +157,21 @@ def admin():
         flash("Sorry but you are not the admin")
         return redirect(url_for('noadmin'))
 
+
 @app.route("/")
 def index():
     return render_template("index.html", title="ვეფხისტყაოსანი")
 
-@app.route("/update", methods=["GET", "POST"])
-def update():
-    form = UpdateForm()
-    if form.validate_on_submit():
-        print(form.update.data)
-    return render_template("update.html", form=form, title="გააგრძელე - ვეფხისტყაოსანი")
 
 @app.route("/about")
 def about():
     return render_template("about.html", title="პროექტის შესახებ - ვეფხისტყაოსანი")
 
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     form = MessageForm()
     if form.validate_on_submit():
-
         new_message = ContactMessage(
             name=form.name.data,
             email=form.email.data,
@@ -228,9 +193,11 @@ def contact():
 
     return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
 
+
 @app.route("/author")
 def author():
     return render_template("author.html", title="ავტორის შესახებ - ვეფხისტყაოსანი")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -247,7 +214,7 @@ def login():
     return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
 
 
-CHAPTERS_DIR = "chapters"  # ფოლდერის სახელი
+CHAPTERS_DIR = "chapters"
 
 
 @app.route("/poem")
@@ -256,8 +223,7 @@ def poem():
         f for f in os.listdir(CHAPTERS_DIR) if f.endswith(".txt")
     ], key=lambda x: int(x.replace(".txt", "")))
 
-    return render_template("poem.html", chapters=chapters,title="პოემა - ვეფხისტყაოსანი")
-
+    return render_template("poem.html", chapters=chapters, title="პოემა - ვეფხისტყაოსანი")
 
 
 chapter_titles = {
@@ -265,6 +231,7 @@ chapter_titles = {
     2: "ამბავი როსტევან არაბთა მეფისა",
     3: "როსტევან მეფისაგან და ავთანდილისაგან ნადირობა",
 }
+
 
 @app.route("/poem/chapter/<int:chapter_id>")
 def chapter_page(chapter_id):
@@ -276,10 +243,8 @@ def chapter_page(chapter_id):
     with open(filename, encoding="utf-8") as f:
         content = f.read()
 
-
     chapter_title = chapter_titles.get(chapter_id, f"თავი {chapter_id}")
 
-    # სწორედ ეს გამოჩნდება ფანჯრის ზედა title-ში
     page_title = f"{chapter_title} - ვეფხისტყაოსანი"
 
     return render_template(
@@ -288,9 +253,8 @@ def chapter_page(chapter_id):
         content=content,
         title="ვეფხისტყაოსანი",
         chapter_title=chapter_title,
-        chapter_audio = chapter_audio
+        chapter_audio=chapter_audio
     )
-
 
 
 @app.route('/logout')
@@ -299,10 +263,12 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route("/profile")
 @login_required
 def profile():
     return render_template("profile.html", title="პროფილი - ვეფხისტყაოსანი")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -319,7 +285,6 @@ def register():
             form.email.errors.append("ეს ელფოსტა უკვე გამოყენებულია.")
             return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
-        # ✅ ჰეშირებული პაროლი
         hashed_password = generate_password_hash(form.password.data)
 
         user = User(
@@ -344,6 +309,7 @@ def register():
 def privacy():
     return render_template("privacy.html", title="უსაფრთხოების პოლიტიკა - ვეფხისტყაოსანი")
 
+
 @app.route("/admin/messages")
 @login_required
 def view_messages():
@@ -354,10 +320,10 @@ def view_messages():
     messages = ContactMessage.query.order_by(ContactMessage.id.desc()).all()
     return render_template("admin_messages.html", messages=messages, title="კონტაქტის შეტყობინებები")
 
+
 @app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
 @login_required
 def delete_user(user_id):
-
     if current_user.username != "sandroqatamadze":
         flash("თქვენ არ გაქვთ წაშლის უფლება.", "danger")
         return redirect(url_for('view_users'))
@@ -418,7 +384,6 @@ def change_role(user_id):
     user.role = new_role
     db.session.commit()
 
-    
     if previous_role != new_role:
         subject = "თქვენი როლი შეიცვალა"
         body = f"""
@@ -455,7 +420,6 @@ def change_role(user_id):
     return redirect(url_for('view_users'))
 
 
-
 @app.route('/admin/delete_message/<int:message_id>', methods=['POST'])
 @login_required
 def delete_message(message_id):
@@ -469,10 +433,12 @@ def delete_message(message_id):
     flash("შეტყობინება წარმატებით წაიშალა!", "success")
     return redirect(url_for('view_messages'))
 
+
 @app.route("/characters")
 def characters():
     characters = Character.query.all()
-    return render_template("characters.html", characters=characters,title="პერსონაჟები - ვეფხისტყაოსანი")
+    return render_template("characters.html", characters=characters, title="პერსონაჟები - ვეფხისტყაოსანი")
+
 
 @app.route('/add-character', methods=['POST'])
 @login_required
@@ -491,6 +457,7 @@ def add_character():
     flash('პერსონაჟი წარმატებით დაემატა!')
     return redirect(url_for('characters'))
 
+
 @app.route('/edit-character/<int:character_id>', methods=['GET', 'POST'])
 @login_required
 def edit_character(character_id):
@@ -503,7 +470,8 @@ def edit_character(character_id):
         character.image_url = request.form['image_url']
         db.session.commit()
         return redirect(url_for('characters'))
-    return render_template('edit_character.html', character=character,title="პერსონაჟის რედაქტირება - ვეფხისტყაოსანი")
+    return render_template('edit_character.html', character=character, title="პერსონაჟის რედაქტირება - ვეფხისტყაოსანი")
+
 
 @app.route('/delete-character/<int:character_id>', methods=['POST'])
 @login_required
@@ -514,6 +482,7 @@ def delete_character(character_id):
     db.session.delete(character)
     db.session.commit()
     return redirect(url_for('characters'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

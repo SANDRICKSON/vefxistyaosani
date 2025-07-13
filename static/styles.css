@@ -3,7 +3,6 @@ body {
     font-family: "BPG Nino Mtavruli", sans-serif;
 }
 
-/* Navbar */
 .navbar {
     background-color: #8b5e3b !important;
 }
@@ -11,7 +10,6 @@ body {
     color: white !important;
 }
 
-/* Hero Section */
 .hero {
     background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Knight_in_panther%27s_skin_manuscript.jpg/800px-Knight_in_panther%27s_skin_manuscript.jpg') no-repeat center center;
     background-size: cover;
@@ -25,7 +23,6 @@ body {
     padding: 20px;
 }
 
-/* Responsive Design */
 @media (max-width: 992px) {
     .hero {
         height: 300px;
@@ -54,4 +51,3 @@ body {
         font-size: 1.5rem;
     }
 }
-

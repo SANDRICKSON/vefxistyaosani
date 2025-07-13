@@ -5,14 +5,14 @@
     <h1>ეს არის პოემის გვერდი</h1>
     <p>აქ შეგიძლიათ გაეცნოთ პოემას და გაუგებარი სიტყვები ჰკითხოთ ჩეთბოტს.</p>
 
-    <!-- თავების ბმულები -->
+
     <div class="chapter-links">
         <a href="{{ url_for('chapter_page', chapter_id=1) }}" class="chapter-link">პროლოგი</a>
         <a href="{{ url_for('chapter_page', chapter_id=2) }}" class="chapter-link">ამბავი როსტევან არაბთა მეფისა</a>
         <a href="{{ url_for('chapter_page', chapter_id=3) }}" class="chapter-link">როსტევან მეფისაგან და ავთანდილისაგან ნადირობა</a>
     </div>
 
-    <!-- ღილაკი ჩეთბოტისთვის -->
+
     {% if current_user.is_authenticated %}
     <button id="chatbot-toggle" class="custom-btn">ჰკითხე ჩეთბოტს</button>
     {% else %}
@@ -20,7 +20,6 @@
     {%endif%}
 </div>
 
-<!-- დამალული ჩეთბოტის iframe -->
 <iframe
     id="chatbot-frame"
     src="https://animachatbotics.com/chatbot/Chat/4450"
@@ -38,7 +37,6 @@
     ">
 </iframe>
 
-<!-- სტილები -->
 <style>
     .content-container {
         text-align: center;
@@ -108,12 +106,11 @@
 
 .custom-btn:disabled:hover {
     opacity: 1;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); /* წითელი ჩრდილი hover-ზე */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
 }
 
 </style>
 
-<!-- ჩეთბოტის გამხსნელი სკრიპტი -->
 <script>
     document.getElementById('chatbot-toggle').addEventListener('click', function () {
         const iframe = document.getElementById('chatbot-frame');

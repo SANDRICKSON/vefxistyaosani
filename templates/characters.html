@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <!-- დეტალების მოდალი -->
+
         <div class="modal fade" id="modal{{ character.id }}" tabindex="-1" aria-labelledby="modalLabel{{ character.id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="font-family: 'BPG Classic Medium', sans-serif;">
@@ -55,7 +55,7 @@
     </div>
 
     {% if current_user.is_authenticated and current_user.role == 'admin' %}
-    <!-- დამატების მოდალი -->
+
     <div class="modal fade" id="addCharacterModal" tabindex="-1" aria-labelledby="addCharacterModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form class="modal-content" method="POST" action="{{ url_for('add_character') }}">
@@ -86,7 +86,6 @@
     {% endif %}
 </div>
 
-<!-- სტილები -->
 <style>
     body {
         font-family: 'BPG Classic Medium', sans-serif;
