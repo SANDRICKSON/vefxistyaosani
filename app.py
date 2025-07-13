@@ -354,7 +354,7 @@ def delete_user(user_id):
 @app.route('/admin/change_role/<int:user_id>', methods=['POST'])
 @login_required
 def change_role(user_id):
-    if current_user.username != "sandroqatamadze":
+    if current_user.role != "admin":
         flash("თქვენ არ გაქვთ როლის შეცვლის უფლება.", "danger")
         return redirect(url_for('view_users'))
 
@@ -415,7 +415,7 @@ def change_role(user_id):
 @app.route('/admin/delete_message/<int:message_id>', methods=['POST'])
 @login_required
 def delete_message(message_id):
-    if current_user.username != "sandroqatamadze":
+    if current_user.role != "admin":
         flash("არ გაქვთ წვდომა!", "danger")
         return redirect(url_for('view_messages'))
 
