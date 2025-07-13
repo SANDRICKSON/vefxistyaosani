@@ -11,7 +11,7 @@ import os
 from models import User, ContactMessage, Character, ChapterAudio
 from forms import RegisterForm, MessageForm, LoginForm, UpdateForm, ForgotPasswordForm,ResetPasswordForm, FormUpdateForm
 
-s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
 
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -101,21 +101,7 @@ def reset_password(token):
 def unauthorized(error):
     return render_template('401.html', title="არაავტორიზირებული მომხმარებელი - ვეფხისტყაოსანი"), 401
 
-@app.errorhandler(500)
-def internal_server_error(error):
-    return render_template('500.html', title="სერვერის შეცდომა - ვეფხისტყაოსანი"), 500
 
-@app.errorhandler(502)
-def bad_gateway(error):
-    return render_template('502.html',title="ცუდი კარიბჭე - ვეფხისტყაოსანი"), 502
-
-@app.errorhandler(503)
-def service_unavailable(error):
-    return render_template('503.html', title="მიუწვდომელი სერვისი - ვეფხისტყაოსანი"), 503
-
-@app.errorhandler(504)
-def gateway_timeout(error):
-    return render_template('504.html', title="სესიის დრო ამოიწურა - ვეფხისტყაოსანი"), 504
 
 @app.route("/403")
 @login_required
@@ -156,7 +142,7 @@ def send_verification_email(user_email):
     token = generate_verification_token(user_email)
     confirm_url = url_for('confirm_email', token=token, _external=True)
     subject = "Email Verification"
-    message_body = f"დააჭირეთ ამ ბმულს თქვენი ემაილის ვერიფიკაციისთვის: {confirm_url}"
+    message_body = f"მოგესალმებით! 😊\n\nმადლობა, რომ დაინტერესდით ჩემი პროექტით. თქვენი ანგარიში წარმატებით შეიქმნა! გთხოვთ, გაიარეთ ვერიფიკაცია შემდეგ ბმულზე:\n\n{confirm_url}\n\nმადლობა ყურადღებისთვის! 🙌 \n პატივისცემით სანდრო ქათამაძე - პროექტის ავტორი"
 
     msg = Message(subject=subject, recipients=[user_email], body=message_body)
     mail.send(msg)
@@ -327,27 +313,31 @@ def register():
 
         if existing_user:
             form.username.errors.append("ეს სახელი უკვე გამოყენებულია.")
-            return render_template("register.html", form=form,title="რეგისტრაცია - ვეფხისტყაოსანი")
+            return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
         if existing_email:
             form.email.errors.append("ეს ელფოსტა უკვე გამოყენებულია.")
-            return render_template("register.html", form=form,title="რეგისტრაცია - ვეფხისტყაოსანი")
+            return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
-        # თუ არ არსებობს, შექმნე
+        # ✅ ჰეშირებული პაროლი
+        hashed_password = generate_password_hash(form.password.data)
+
         user = User(
             username=form.username.data,
             email=form.email.data,
-            password=form.password.data,
+            password=hashed_password,
             birthday=form.birthday.data,
             country=form.country.data,
             gender=form.gender.data,
             is_verified=False
         )
+
         user.create()
         send_verification_email(user.email)
         flash("თქვენს ელფოსტაზე გაგზავნილია ვერიფიკაციის ბმული!", "info")
         return redirect(url_for("login"))
-    return render_template("register.html", form=form,title="რეგისტრაცია - ვეფხისტყაოსანი")
+
+    return render_template("register.html", form=form, title="რეგისტრაცია - ვეფხისტყაოსანი")
 
 
 @app.route("/privacy")
@@ -428,7 +418,7 @@ def change_role(user_id):
     user.role = new_role
     db.session.commit()
 
-    # თუ როლი შეიცვალა, ვუგზავნით მეილს
+    
     if previous_role != new_role:
         subject = "თქვენი როლი შეიცვალა"
         body = f"""
