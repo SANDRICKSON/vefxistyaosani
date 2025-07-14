@@ -150,7 +150,7 @@ body {
 </style>
 
 <script>
-// ენთერზე გაგზავნა
+
 document.getElementById('question-input').addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -161,12 +161,10 @@ document.getElementById('question-input').addEventListener('keydown', function (
 window.addEventListener("DOMContentLoaded", () => {
     const botSpans = document.querySelectorAll('.bot-typing');
 
-    // ბოლოს გარდა დანარჩენებზე ჩასვი პირდაპირ ტექსტი
     for (let i = 0; i < botSpans.length - 1; i++) {
         botSpans[i].textContent = botSpans[i].dataset.answer || botSpans[i].textContent;
     }
 
-    // ბოლოსთვის: ტიპინგ ანიმაცია
     const lastSpan = botSpans[botSpans.length - 1];
     if (lastSpan && lastSpan.dataset.answer) {
         const fullText = lastSpan.dataset.answer;
@@ -180,7 +178,6 @@ window.addEventListener("DOMContentLoaded", () => {
         typeChar();
     }
 
-   
     const chatBox = document.getElementById('chat-box');
     chatBox.scrollTop = chatBox.scrollHeight;
 });
