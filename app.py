@@ -8,7 +8,7 @@ from extensions import app, mail,db
 from werkzeug.utils import secure_filename
 import os
 
-from models import User, ContactMessage, Character, ChapterAudio
+from models import User, ContactMessage, Character, ChapterAudio,ChatHistory,ChatResponse
 from forms import RegisterForm, MessageForm, LoginForm,  FormUpdateForm
 
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -456,6 +456,37 @@ def delete_character(character_id):
     db.session.delete(character)
     db.session.commit()
     return redirect(url_for('characters'))
+
+@app.route("/chatbot/clear", methods=["POST"])
+@login_required
+def clear_chat_history():
+    ChatHistory.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
+    return redirect(url_for("chatbot_page"))
+
+@app.route("/chatbot", methods=["GET", "POST"])
+@login_required
+def chatbot_page():
+    response = None
+
+    if request.method == "POST":
+        user_input = request.form.get("question", "").strip().lower()
+        if user_input:
+
+            match = ChatResponse.query.filter(ChatResponse.question.ilike(f"%{user_input}%")).first()
+            response = match.answer if match else "სამწუხაროდ, პასუხი ვერ მოიძებნა."
+
+            new_entry = ChatHistory(
+                user_id=current_user.id,
+                question=user_input,
+                answer=response
+            )
+            db.session.add(new_entry)
+            db.session.commit()
+
+    history = ChatHistory.query.filter_by(user_id=current_user.id).order_by(ChatHistory.timestamp.asc()).all()
+
+    return render_template("chatbot.html", response=response, history=history, title="ჩეთბოტი - ვეფხისტყაოსანი") 
 
 if __name__ == "__main__":
     app.run(debug=True)
