@@ -58,15 +58,9 @@ def settings():
 
     return render_template("settings.html", form=form, title="პარამეტრები - ვეფხისტყაოსანი")
 
-
-
-
-
 @app.errorhandler(401)
 def unauthorized(error):
     return render_template('401.html', title="არაავტორიზირებული მომხმარებელი - ვეფხისტყაოსანი"), 401
-
-
 
 @app.route("/403")
 @login_required
@@ -156,8 +150,6 @@ def admin():
 def index():
     return render_template("index.html", title="ვეფხისტყაოსანი")
 
-
-
 @app.route("/about")
 def about():
     return render_template("about.html", title="პროექტის შესახებ - ვეფხისტყაოსანი")
@@ -196,7 +188,7 @@ def author():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # ვეძებთ მომხმარებელს ან ელფოსტით ან იუზერნეიმით
+
         user = User.query.filter(
             (User.username == form.username.data) | (User.email == form.username.data)
         ).first()
@@ -214,10 +206,7 @@ def login():
 
     return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
 
-
-
-CHAPTERS_DIR = "chapters"  # ფოლდერის სახელი
-
+CHAPTERS_DIR = "chapters"  
 
 @app.route("/poem")
 def poem():
@@ -226,8 +215,6 @@ def poem():
     ], key=lambda x: int(x.replace(".txt", "")))
 
     return render_template("poem.html", chapters=chapters,title="პოემა - ვეფხისტყაოსანი")
-
-
 
 chapter_titles = {
     1: "პროლოგი",
@@ -245,10 +232,8 @@ def chapter_page(chapter_id):
     with open(filename, encoding="utf-8") as f:
         content = f.read()
 
-
     chapter_title = chapter_titles.get(chapter_id, f"თავი {chapter_id}")
 
-    # სწორედ ეს გამოჩნდება ფანჯრის ზედა title-ში
     page_title = f"{chapter_title} - ვეფხისტყაოსანი"
 
     return render_template(
@@ -259,8 +244,6 @@ def chapter_page(chapter_id):
         chapter_title=chapter_title,
         chapter_audio = chapter_audio
     )
-
-
 
 @app.route('/logout')
 @login_required
@@ -288,7 +271,6 @@ def register():
             form.email.errors.append("ეს ელფოსტა უკვე გამოყენებულია.")
             return render_template("register.html", form=form,title="რეგისტრაცია - ვეფხისტყაოსანი")
 
-        # თუ არ არსებობს, შექმნე
         user = User(
             username=form.username.data,
             email=form.email.data,
@@ -303,7 +285,6 @@ def register():
         flash("თქვენს ელფოსტაზე გაგზავნილია ვერიფიკაციის ბმული!", "info")
         return redirect(url_for("login"))
     return render_template("register.html", form=form,title="რეგისტრაცია - ვეფხისტყაოსანი")
-
 
 @app.route("/privacy")
 def privacy():
@@ -359,7 +340,6 @@ def delete_user(user_id):
 
     return redirect(url_for('view_users'))
 
-
 @app.route('/admin/change_role/<int:user_id>', methods=['POST'])
 @login_required
 def change_role(user_id):
@@ -383,7 +363,6 @@ def change_role(user_id):
     user.role = new_role
     db.session.commit()
 
-    # თუ როლი შეიცვალა, ვუგზავნით მეილს
     if previous_role != new_role:
         subject = "თქვენი როლი შეიცვალა"
         body = f"""
@@ -418,8 +397,6 @@ def change_role(user_id):
 
     flash(f"{user.username} ახლა არის {new_role} და ინფორმირებულია ელფოსტით.", "success")
     return redirect(url_for('view_users'))
-
-
 
 @app.route('/admin/delete_message/<int:message_id>', methods=['POST'])
 @login_required
@@ -482,5 +459,3 @@ def delete_character(character_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
