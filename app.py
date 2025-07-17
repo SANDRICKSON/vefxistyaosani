@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import  SignatureExpired, BadTimeSignature
@@ -35,14 +35,31 @@ def settings():
     form = FormUpdateForm(obj=current_user)
 
     if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.email = form.email.data
-        current_user.birthday = form.birthday.data
-        current_user.country = form.country.data
-        current_user.gender = form.gender.data
+        changes = []
+
+        if current_user.username != form.username.data:
+            changes.append(f"მომხმარებლის სახელი: {current_user.username} → {form.username.data}")
+            current_user.username = form.username.data
+
+        if current_user.email != form.email.data:
+            changes.append(f"ელფოსტა: {current_user.email} → {form.email.data}")
+            current_user.email = form.email.data
+
+        if current_user.birthday != form.birthday.data:
+            changes.append(f"დაბადების თარიღი: {current_user.birthday} → {form.birthday.data}")
+            current_user.birthday = form.birthday.data
+
+        if current_user.country != form.country.data:
+            changes.append(f"ქვეყანა: {current_user.country} → {form.country.data}")
+            current_user.country = form.country.data
+
+        if current_user.gender != form.gender.data:
+            changes.append(f"სქესი: {current_user.gender} → {form.gender.data}")
+            current_user.gender = form.gender.data
 
         if form.password.data:
             current_user.password = generate_password_hash(form.password.data)
+            changes.append("პაროლი განახლდა")
 
         if 'avatar' in request.files:
             file = request.files['avatar']
@@ -51,12 +68,34 @@ def settings():
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 current_user.avatar = filename
+                changes.append("პროფილის სურათი შეიცვალა")
 
         db.session.commit()
+
+        # თუ რაიმე შეიცვალა - ვუგზავნით მეილს
+        if changes:
+            try:
+                msg = Message(
+                    subject="პროფილის განახლება",
+                    recipients=[current_user.email],
+                    sender="vepkkhistyaosaniproject@gmail.com",
+                    body=(
+                        f"გამარჯობა, {current_user.username}!\n\n"
+                        f"თქვენი პროფილის ინფორმაცია განახლდა. ცვლილებები:\n\n" +
+                        "\n".join(f"- {c}" for c in changes) +
+                        "\n\nთუ ეს თქვენ არ გაგიკეთებიათ, გთხოვთ, დაუყოვნებლივ დაგვიკავშირდეთ.\n\n"
+                        "პატივისცემით,\nსანდრო ქათამაძე\nპროექტის ავტორი"
+                    )
+                )
+                mail.send(msg)
+            except Exception as e:
+                app.logger.error(f"პროფილის განახლების მეილის შეცდომა: {e}")
+
         flash("მონაცემები წარმატებით განახლდა!", "success")
         return redirect(url_for("profile"))
 
     return render_template("settings.html", form=form, title="პარამეტრები - ვეფხისტყაოსანი")
+
 
 @app.errorhandler(401)
 def unauthorized(error):
@@ -117,11 +156,14 @@ def confirm_email(token):
     if user and not user.is_verified:
         user.is_verified = True
         user.save()
+        session['prefill_email'] = user.email  # ეს დაემატოს
         flash("თქვენი ემაილი წარმატებით ვერიფიცირდა!", "success")
     elif user and user.is_verified:
+        session['prefill_email'] = user.email  # მაინც დავტოვოთ
         flash("თქვენი ემაილი უკვე ვერიფიცირებულია!", "info")
 
     return redirect(url_for('login'))
+
 
 @app.route("/admin/users")
 @login_required
@@ -196,8 +238,13 @@ def author():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
 
+    # ეს ნაწილიც დავამატოთ, რომ session-იდან ავიღოთ წინასწარ შესავსები მნიშვნელობა
+    if request.method == "GET":
+        prefill_email = session.pop('prefill_email', '')  # ამოვიღებთ და წავშლით
+        form.username.data = prefill_email
+
+    if form.validate_on_submit():
         user = User.query.filter(
             (User.username == form.username.data) | (User.email == form.username.data)
         ).first()
@@ -214,6 +261,7 @@ def login():
             flash("არასწორი მონაცემები!", "danger")
 
     return render_template("login.html", form=form, title="ავტორიზაცია - ვეფხისტყაოსანი")
+
 
 CHAPTERS_DIR = "chapters"  
 
