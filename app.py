@@ -101,7 +101,7 @@ def send_verification_email(user_email):
     token = generate_verification_token(user_email)
     confirm_url = url_for('confirm_email', token=token, _external=True)
     subject = "Email Verification"
-    message_body = f"დააჭირეთ ამ ბმულს თქვენი ემაილის ვერიფიკაციისთვის: {confirm_url}"
+    message_body = f"მოგესალმებით, ! 😊\n\nმადლობა, რომ დაინტერესდით ჩემი პროექტით. თქვენი ანგარიში წარმატებით შეიქმნა! გთხოვთ, გაიარეთ ვერიფიკაცია შემდეგ ბმულზე:\n\n{confirm_url}\n\nმადლობა ყურადღებისთვის! \n პატივისცემით სანდრო ქათამაძე პროექტის ავტორი 🙌"
 
     msg = Message(subject=subject, recipients=[user_email], body=message_body)
     mail.send(msg)
@@ -159,6 +159,7 @@ def contact():
     form = MessageForm()
     if form.validate_on_submit():
 
+        # 1. შეტყობინების შენახვა ბაზაში
         new_message = ContactMessage(
             name=form.name.data,
             email=form.email.data,
@@ -167,10 +168,17 @@ def contact():
         db.session.add(new_message)
         db.session.commit()
 
+        # 2. ყველა ადმინის იმეილების წამოღება
+        admin_emails = [admin.email for admin in User.query.filter_by(role="admin").all()]
+
+        # 3. ფიქსირებული იმეილი + admin-ების დამატება
+        recipients = ["vepkhistyaosaniproject@gmail.com"] + admin_emails
+
+        # 4. შეტყობინების გაგზავნა
         msg = Message(
             subject="ახალი კონტაქტის შეტყობინება",
             sender="vepkhistyaosaniproject@gmail.com",
-            recipients=["vepkhistyaosaniproject@gmail.com"],
+            recipients=recipients,
             body=f"მომხმარებელი: {form.name.data}\nელფოსტა: {form.email.data}\n\nშეტყობინება:\n{form.message.data}"
         )
         mail.send(msg)
@@ -179,6 +187,7 @@ def contact():
         return redirect(url_for("contact"))
 
     return render_template("contact.html", form=form, title="კონტაქტი - ვეფხისტყაოსანი")
+
 
 @app.route("/author")
 def author():
@@ -487,6 +496,18 @@ def chatbot_page():
     history = ChatHistory.query.filter_by(user_id=current_user.id).order_by(ChatHistory.timestamp.asc()).all()
 
     return render_template("chatbot.html", response=response, history=history, title="ჩეთბოტი - ვეფხისტყაოსანი") 
+
+@app.route('/admin/delete_all_messages', methods=['POST'])
+@login_required
+def delete_all_messages():
+    if current_user.role != "admin":
+        flash("არ გაქვთ წვდომა!", "danger")
+        return redirect(url_for("view_messages"))
+
+    ContactMessage.query.delete()
+    db.session.commit()
+    flash("ყველა შეტყობინება წარმატებით წაიშალა!", "success")
+    return redirect(url_for("view_messages"))
 
 if __name__ == "__main__":
     app.run(debug=True)
